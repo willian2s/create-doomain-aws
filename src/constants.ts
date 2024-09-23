@@ -12,4 +12,6 @@ export const MESSAGES = {
   HOSTED_ZONE_ID_REQUIRED: "O campo 'hostedZoneId' é obrigatório.",
   SHOPIFY_RECORD_CREATED: "Registro DNS para Shopify criado com sucesso.",
   ERROR_CREATING_SHOPIFY_RECORD: "Erro ao criar registro DNS para Shopify.",
+  ERROR_ADD_DOMAIN: "Erro ao adicionar domínio ao Amplify.",
+  SUCCESS_ADD_DOMAIN: "Domínio adicionado ao Amplify com sucesso.",
 };
