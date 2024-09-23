@@ -1,0 +1,73 @@
+{
+	"info": {
+		"_postman_id": "014ef427-1247-47e6-be2d-fb31445eea63",
+		"name": "route 53",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "14866339"
+	},
+	"item": [
+		{
+			"name": "create domian",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"domain\": \"example.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/v1/domains/create-domain"
+			},
+			"response": []
+		},
+		{
+			"name": "create shopify dns",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"domain\": \"shop.example.com\",\n  \"hostedZoneId\": \"/hostedzone/Z1D633PJN98FT9\",\n  \"shopifyDomain\": \"myshop.myshopify.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/v1/domains/create-shopify-record"
+			},
+			"response": []
+		},
+		{
+			"name": "create amplify domain",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"domain\": \"shop.example.com\",\n  \"hostedZoneId\": \"/hostedzone/Z1D633PJN98FT9\",\n  \"shopifyDomain\": \"myshop.myshopify.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/v1/domains/create-shopify-record"
+			},
+			"response": []
+		},
+		{
+			"name": "check domain",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3000/api/v1/domains/check-domain/Z1D633PJN98FT9"
+			},
+			"response": []
+		}
+	]
+}
