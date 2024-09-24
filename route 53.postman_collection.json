@@ -49,14 +49,14 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"domain\": \"shop.example.com\",\n  \"hostedZoneId\": \"/hostedzone/Z1D633PJN98FT9\",\n  \"shopifyDomain\": \"myshop.myshopify.com\"\n}",
+					"raw": "{\n    \"appId\": \"YOUR_APP_ID\", // Substitua pelo seu App ID\n    \"domainName\": \"example.com\", // Substitua pelo seu domínio\n    \"subDomain\": {\n        \"branchName\": \"main\", // Nome da branch associada ao subdomínio\n        \"prefix\": \"pay\" // Prefixo do subdomínio\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "http://localhost:3000/api/v1/domains/create-shopify-record"
+				"url": "http://localhost:3000/api/v1/amplify/add-domain"
 			},
 			"response": []
 		},
