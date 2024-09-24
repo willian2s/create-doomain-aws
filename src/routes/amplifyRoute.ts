@@ -18,7 +18,7 @@ router.post("/add-domain", async (req: Request, res: Response) => {
 
     res.status(201).json({
       message: MESSAGES.SUCCESS_ADD_DOMAIN,
-      dnsRecorder: response,
+      ...response,
     });
   } catch (error) {
     res.status(400).json({ message: MESSAGES.ERROR_ADD_DOMAIN, error });
@@ -38,7 +38,7 @@ router.get(
 
       res.status(201).json({
         message: MESSAGES.SUCCESS_GET_CNAME,
-        dnsRecorder: response,
+        ...response,
       });
     } catch (error) {
       res.status(400).json({ message: MESSAGES.DOMAIN_NOT_FOUND, error });

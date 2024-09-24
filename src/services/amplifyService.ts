@@ -7,10 +7,13 @@ import {
 } from "@aws-sdk/client-amplify";
 import { AWS_CONFIG } from "../constants";
 
-type AddDomainResponse = {
+type DNSRecorder = {
   subDomainName: string | undefined;
   cname: string | undefined;
+};
+type AddDomainResponse = {
   status: string | undefined;
+  dnsRecorder: DNSRecorder[] | undefined;
 };
 
 type AddDomain = {
@@ -38,7 +41,7 @@ class AmplifyService {
     appId,
     domainName,
     subDomain,
-  }: AddDomain): Promise<AddDomainResponse[] | undefined> {
+  }: AddDomain): Promise<AddDomainResponse | undefined> {
     try {
       const command = new CreateDomainAssociationCommand({
         appId: appId,
@@ -62,11 +65,13 @@ class AmplifyService {
           );
         });
 
-        return subDomains?.map((subDomain) => ({
-          subDomainName: subDomain.subDomainSetting?.prefix,
-          cname: subDomain.dnsRecord,
+        return {
           status: response?.domainAssociation?.domainStatus,
-        }));
+          dnsRecorder: subDomains?.map((sub: SubDomain) => ({
+            subDomainName: sub.subDomainSetting?.prefix,
+            cname: sub.dnsRecord,
+          })),
+        };
       }
     } catch (error) {
       console.error("Erro ao adicionar domínio:", error);
@@ -77,7 +82,7 @@ class AmplifyService {
   async getCnameForSubdomain({
     appId,
     domainName,
-  }: GetCname): Promise<AddDomainResponse[] | undefined> {
+  }: GetCname): Promise<AddDomainResponse | undefined> {
     try {
       const command = new ListDomainAssociationsCommand({
         appId: appId,
@@ -90,11 +95,13 @@ class AmplifyService {
       );
 
       if (domainAssociation) {
-        return domainAssociation.subDomains?.map((subDomain) => ({
-          subDomainName: subDomain.subDomainSetting?.prefix,
-          cname: subDomain.dnsRecord,
-          status: domainAssociation.domainStatus,
-        }));
+        return {
+          status: domainAssociation?.domainStatus,
+          dnsRecorder: domainAssociation.subDomains?.map((subDomain) => ({
+            subDomainName: subDomain.subDomainSetting?.prefix,
+            cname: subDomain.dnsRecord,
+          })),
+        };
       } else {
         throw new Error("Domínio não encontrado.");
       }
