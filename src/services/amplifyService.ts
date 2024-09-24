@@ -10,7 +10,16 @@ import { AWS_CONFIG } from "../constants";
 type AddDomainResponse = {
   subDomainName: string | undefined;
   cname: string | undefined;
+  status: string | undefined;
 };
+
+type AddDomain = {
+  appId: string;
+  domainName: string;
+  subDomain: SubDomainSetting;
+};
+
+type GetCname = Omit<AddDomain, "subDomain">;
 
 class AmplifyService {
   private amplifyClient: AmplifyClient;
@@ -25,11 +34,11 @@ class AmplifyService {
     });
   }
 
-  async addDomain(
-    appId: string,
-    domainName: string,
-    subDomain: SubDomainSetting
-  ): Promise<AddDomainResponse[] | undefined> {
+  async addDomain({
+    appId,
+    domainName,
+    subDomain,
+  }: AddDomain): Promise<AddDomainResponse[] | undefined> {
     try {
       const command = new CreateDomainAssociationCommand({
         appId: appId,
@@ -55,7 +64,8 @@ class AmplifyService {
 
         return subDomains?.map((subDomain) => ({
           subDomainName: subDomain.subDomainSetting?.prefix,
-          cname: subDomain.dnsRecord, // Sempre retorna o CNAME, independentemente da verificação
+          cname: subDomain.dnsRecord,
+          status: response?.domainAssociation?.domainStatus,
         }));
       }
     } catch (error) {
@@ -64,10 +74,10 @@ class AmplifyService {
     }
   }
 
-  async getCnameForSubdomain(
-    appId: string,
-    domainName: string
-  ): Promise<AddDomainResponse[] | undefined> {
+  async getCnameForSubdomain({
+    appId,
+    domainName,
+  }: GetCname): Promise<AddDomainResponse[] | undefined> {
     try {
       const command = new ListDomainAssociationsCommand({
         appId: appId,
@@ -83,6 +93,7 @@ class AmplifyService {
         return domainAssociation.subDomains?.map((subDomain) => ({
           subDomainName: subDomain.subDomainSetting?.prefix,
           cname: subDomain.dnsRecord,
+          status: domainAssociation.domainStatus,
         }));
       } else {
         throw new Error("Domínio não encontrado.");

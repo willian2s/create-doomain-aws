@@ -10,11 +10,11 @@ router.post("/add-domain", async (req: Request, res: Response) => {
   const { appId, domainName, subDomain } = req.body;
 
   try {
-    const response = await amplifyService.addDomain(
+    const response = await amplifyService.addDomain({
       appId,
       domainName,
-      subDomain
-    ); // Chamar o método da classe
+      subDomain,
+    }); // Chamar o método da classe
 
     res.status(201).json({
       message: MESSAGES.SUCCESS_ADD_DOMAIN,
@@ -31,10 +31,10 @@ router.get(
     const { appId, domainName } = req.params;
 
     try {
-      const response = await amplifyService.getCnameForSubdomain(
+      const response = await amplifyService.getCnameForSubdomain({
         appId,
-        domainName
-      ); // Chamar o método da classe
+        domainName,
+      }); // Chamar o método da classe
 
       res.status(201).json({
         message: MESSAGES.SUCCESS_GET_CNAME,
