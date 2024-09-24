@@ -1,10 +1,16 @@
-// src/services/amplifyService.ts
-
 import {
   AmplifyClient,
   CreateDomainAssociationCommand,
+  ListDomainAssociationsCommand,
+  SubDomain,
+  SubDomainSetting,
 } from "@aws-sdk/client-amplify";
 import { AWS_CONFIG } from "../constants";
+
+type AddDomainResponse = {
+  subDomainName: string | undefined;
+  cname: string | undefined;
+};
 
 class AmplifyService {
   private amplifyClient: AmplifyClient;
@@ -22,8 +28,8 @@ class AmplifyService {
   async addDomain(
     appId: string,
     domainName: string,
-    subDomain: { branchName: string; prefix: string }
-  ): Promise<void> {
+    subDomain: SubDomainSetting
+  ): Promise<AddDomainResponse[] | undefined> {
     try {
       const command = new CreateDomainAssociationCommand({
         appId: appId,
@@ -41,15 +47,49 @@ class AmplifyService {
         console.log(
           `Configuração DNS necessária para o domínio ${domainName}:`
         );
-        subDomains?.forEach((sub: any) => {
+        subDomains?.forEach((sub: SubDomain) => {
           console.log(
-            `- CNAME para ${sub.prefix}.${domainName}: ${sub.domainStatus}`
+            `- CNAME para ${sub.subDomainSetting?.prefix}.${domainName}: ${sub.dnsRecord}`
           );
         });
+
+        return subDomains?.map((subDomain) => ({
+          subDomainName: subDomain.subDomainSetting?.prefix,
+          cname: subDomain.dnsRecord, // Sempre retorna o CNAME, independentemente da verificação
+        }));
       }
     } catch (error) {
       console.error("Erro ao adicionar domínio:", error);
       throw error; // Re-lançar erro para manipulação na rota
+    }
+  }
+
+  async getCnameForSubdomain(
+    appId: string,
+    domainName: string
+  ): Promise<AddDomainResponse[] | undefined> {
+    try {
+      const command = new ListDomainAssociationsCommand({
+        appId: appId,
+      });
+
+      const data = await this.amplifyClient.send(command);
+
+      const domainAssociation = data.domainAssociations?.find(
+        (association) => association.domainName === domainName
+      );
+
+      if (domainAssociation) {
+        return domainAssociation.subDomains?.map((subDomain) => ({
+          subDomainName: subDomain.subDomainSetting?.prefix,
+          cname: subDomain.dnsRecord,
+        }));
+      } else {
+        throw new Error("Domínio não encontrado.");
+      }
+    } catch (error) {
+      console.error("Erro ao obter o CNAME:", error);
+      throw error;
     }
   }
 }

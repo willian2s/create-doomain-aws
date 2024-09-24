@@ -13,5 +13,7 @@ export const MESSAGES = {
   SHOPIFY_RECORD_CREATED: "Registro DNS para Shopify criado com sucesso.",
   ERROR_CREATING_SHOPIFY_RECORD: "Erro ao criar registro DNS para Shopify.",
   ERROR_ADD_DOMAIN: "Erro ao adicionar domínio ao Amplify.",
+  DOMAIN_NOT_FOUND: "Domínio não encontrado.",
   SUCCESS_ADD_DOMAIN: "Domínio adicionado ao Amplify com sucesso.",
+  SUCCESS_GET_CNAME: "CNAME obtido com sucesso.",
 };
