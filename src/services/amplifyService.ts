@@ -2,6 +2,7 @@ import {
   AmplifyClient,
   CreateDomainAssociationCommand,
   ListDomainAssociationsCommand,
+  GetDomainAssociationCommand,
   SubDomain,
   SubDomainSetting,
 } from "@aws-sdk/client-amplify";
@@ -9,11 +10,13 @@ import { AWS_CONFIG } from "../constants";
 
 type DNSRecorder = {
   subDomainName: string | undefined;
-  cname: string | undefined;
+  type: string | undefined;
+  value: string | undefined;
 };
 type AddDomainResponse = {
   status: string | undefined;
   dnsRecorder: DNSRecorder[] | undefined;
+  certificateVerificationDNSRecord: DNSRecorder | undefined;
 };
 
 type AddDomain = {
@@ -65,12 +68,28 @@ class AmplifyService {
           );
         });
 
+        const [subDomainName, type, value] =
+          response?.domainAssociation?.certificateVerificationDNSRecord?.split(
+            " "
+          ) || [];
+
         return {
           status: response?.domainAssociation?.domainStatus,
-          dnsRecorder: subDomains?.map((sub: SubDomain) => ({
-            subDomainName: sub.subDomainSetting?.prefix,
-            cname: sub.dnsRecord,
-          })),
+          certificateVerificationDNSRecord: {
+            subDomainName: subDomainName || "",
+            type: type || "",
+            value: value || "",
+          },
+          dnsRecorder: subDomains?.map((sub: SubDomain) => {
+            const [subDomainName, type, value] =
+              sub.dnsRecord?.split(" ") || [];
+
+            return {
+              subDomainName: subDomainName || "",
+              type: type || "",
+              value: value || "",
+            };
+          }),
         };
       }
     } catch (error) {
@@ -84,26 +103,51 @@ class AmplifyService {
     domainName,
   }: GetCname): Promise<AddDomainResponse | undefined> {
     try {
-      const command = new ListDomainAssociationsCommand({
+      const command = new GetDomainAssociationCommand({
         appId: appId,
+        domainName: domainName,
       });
 
-      const data = await this.amplifyClient.send(command);
+      const response = await this.amplifyClient.send(command);
+      console.log(response.domainAssociation);
 
-      const domainAssociation = data.domainAssociations?.find(
-        (association) => association.domainName === domainName
-      );
+      if (response.domainAssociation) {
+        const { domainName, subDomains } = response.domainAssociation;
 
-      if (domainAssociation) {
+        console.log(
+          `Configuração DNS necessária para o domínio ${domainName}:`
+        );
+        subDomains?.forEach((sub: SubDomain) => {
+          console.log(
+            `- CNAME para ${sub.subDomainSetting?.prefix}.${domainName}: ${sub.dnsRecord}`
+          );
+          console.log(sub);
+          console.log(sub.dnsRecord?.split(" "));
+        });
+
+        const [subDomainName, type, value] =
+          response?.domainAssociation?.certificateVerificationDNSRecord?.split(
+            " "
+          ) || [];
+
         return {
-          status: domainAssociation?.domainStatus,
-          dnsRecorder: domainAssociation.subDomains?.map((subDomain) => ({
-            subDomainName: subDomain.subDomainSetting?.prefix,
-            cname: subDomain.dnsRecord,
-          })),
+          status: response?.domainAssociation?.domainStatus,
+          certificateVerificationDNSRecord: {
+            subDomainName: subDomainName || "",
+            type: type || "",
+            value: value || "",
+          },
+          dnsRecorder: subDomains?.map((sub: SubDomain) => {
+            const [subDomainName, type, value] =
+              sub.dnsRecord?.split(" ") || [];
+
+            return {
+              subDomainName: subDomainName || "",
+              type: type || "",
+              value: value || "",
+            };
+          }),
         };
-      } else {
-        throw new Error("Domínio não encontrado.");
       }
     } catch (error) {
       console.error("Erro ao obter o CNAME:", error);
