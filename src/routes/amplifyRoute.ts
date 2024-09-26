@@ -46,4 +46,21 @@ router.get(
   }
 );
 
+router.delete(
+  "/domain/:appId/:domainName",
+  async (req: Request, res: Response) => {
+    const { appId, domainName } = req.params;
+
+    try {
+      const response = await amplifyService.deleteDomain({ appId, domainName });
+
+      res
+        .status(200)
+        .json({ message: MESSAGES.SUCCESS_DELETE_DOMAIN, ...response });
+    } catch (error) {
+      res.status(400).json({ message: MESSAGES.ERROR_DELETE_DOMAIN, error });
+    }
+  }
+);
+
 export default router;

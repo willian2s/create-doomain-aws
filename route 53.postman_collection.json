@@ -7,6 +7,68 @@
 	},
 	"item": [
 		{
+			"name": "amplify",
+			"item": [
+				{
+					"name": "get amplify cname",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/v1/amplify/domain/d3d2i8gnduendf/exemple.shop"
+					},
+					"response": []
+				},
+				{
+					"name": "delete amplify domain",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/v1/amplify/domain/d3d2i8gnduendf/exemple.shop"
+					},
+					"response": []
+				},
+				{
+					"name": "create amplify domain",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"appId\": \"d3d2i8gnduendf\", // Substitua pelo seu App ID\n    \"domainName\": \"exemple.shop\", // Substitua pelo seu domínio\n    \"subDomain\": {\n        \"branchName\": \"prod\", // Nome da branch associada ao subdomínio\n        \"prefix\": \"pay\" // Prefixo do subdomínio\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/api/v1/amplify/domain"
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "create domian",
 			"request": {
 				"method": "POST",
@@ -39,45 +101,6 @@
 					}
 				},
 				"url": "http://localhost:3000/api/v1/domains/create-shopify-record"
-			},
-			"response": []
-		},
-		{
-			"name": "create amplify domain",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"appId\": \"d3d2i8gnduendf\", // Substitua pelo seu App ID\n    \"domainName\": \"hubpromotion.shop\", // Substitua pelo seu domínio\n    \"subDomain\": {\n        \"branchName\": \"prod\", // Nome da branch associada ao subdomínio\n        \"prefix\": \"pay\" // Prefixo do subdomínio\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "http://localhost:3000/api/v1/amplify/add-domain"
-			},
-			"response": []
-		},
-		{
-			"name": "gnet amplify cname",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "http://localhost:3000/api/v1/amplify/verify-domain/d3d2i8gnduendf/hubpromotion.shop"
 			},
 			"response": []
 		},

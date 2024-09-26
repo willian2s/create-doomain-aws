@@ -154,6 +154,59 @@ class AmplifyService {
       throw error;
     }
   }
+
+  async deleteDomain({ appId, domainName }: GetCname) {
+    try {
+      const command = new DeleteDomainAssociationCommand({
+        appId: appId,
+        domainName: domainName,
+      });
+
+      const response = await this.amplifyClient.send(command);
+
+      if (response.domainAssociation) {
+        const { domainName, subDomains } = response.domainAssociation;
+
+        console.log(
+          `Configuração DNS necessária para o domínio ${domainName}:`
+        );
+        subDomains?.forEach((sub: SubDomain) => {
+          console.log(
+            `- CNAME para ${sub.subDomainSetting?.prefix}.${domainName}: ${sub.dnsRecord}`
+          );
+          console.log(sub);
+          console.log(sub.dnsRecord?.split(" "));
+        });
+
+        const [subDomainName, type, value] =
+          response?.domainAssociation?.certificateVerificationDNSRecord?.split(
+            " "
+          ) || [];
+
+        return {
+          status: response?.domainAssociation?.domainStatus,
+          certificateVerificationDNSRecord: {
+            subDomainName: subDomainName || "",
+            type: type || "",
+            value: value || "",
+          },
+          dnsRecorder: subDomains?.map((sub: SubDomain) => {
+            const [subDomainName, type, value] =
+              sub.dnsRecord?.split(" ") || [];
+
+            return {
+              subDomainName: subDomainName || "",
+              type: type || "",
+              value: value || "",
+            };
+          }),
+        };
+      }
+    } catch (error) {
+      console.error("Erro ao remover domínio:", error);
+      throw error;
+    }
+  }
 }
 
 export default AmplifyService;
