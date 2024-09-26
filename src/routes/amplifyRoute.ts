@@ -6,7 +6,7 @@ const router = Router();
 const amplifyService = new AmplifyService(); // Instanciar a classe
 
 // Rota para adicionar um domínio ao AWS Amplify
-router.post("/add-domain", async (req: Request, res: Response) => {
+router.post("/domain", async (req: Request, res: Response) => {
   const { appId, domainName, subDomain } = req.body;
 
   try {
@@ -26,7 +26,7 @@ router.post("/add-domain", async (req: Request, res: Response) => {
 });
 
 router.get(
-  "/verify-domain/:appId/:domainName",
+  "/domain/:appId/:domainName",
   async (req: Request, res: Response) => {
     const { appId, domainName } = req.params;
 

@@ -16,4 +16,6 @@ export const MESSAGES = {
   DOMAIN_NOT_FOUND: "Domínio não encontrado.",
   SUCCESS_ADD_DOMAIN: "Domínio adicionado ao Amplify com sucesso.",
   SUCCESS_GET_CNAME: "CNAME obtido com sucesso.",
+  SUCCESS_DELETE_DOMAIN: "Domínio removido com sucesso.",
+  ERROR_DELETE_DOMAIN: "Erro ao remover domínio.",
 };

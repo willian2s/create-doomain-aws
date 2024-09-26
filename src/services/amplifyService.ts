@@ -1,8 +1,8 @@
 import {
   AmplifyClient,
   CreateDomainAssociationCommand,
-  ListDomainAssociationsCommand,
   GetDomainAssociationCommand,
+  DeleteDomainAssociationCommand,
   SubDomain,
   SubDomainSetting,
 } from "@aws-sdk/client-amplify";
