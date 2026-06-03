@@ -1,5 +1,3 @@
-// src/routes/domainRoutes.ts
-
 import { Router, Request, Response } from "express";
 import DomainService from "../services/domainService";
 import { MESSAGES } from "../constants";
@@ -42,7 +40,7 @@ router.get(
     } catch (error) {
       res.status(404).json({ message: MESSAGES.HOSTED_ZONE_NOT_FOUND, error });
     }
-  }
+  },
 );
 
 // Rota para criar um registro DNS para Shopify
@@ -58,7 +56,7 @@ router.post("/create-shopify-record", async (req: Request, res: Response) => {
     await domainService.createShopifyRecord(
       domain,
       hostedZoneId,
-      shopifyDomain
+      shopifyDomain,
     ); // Passe o domínio da Shopify
     res.status(201).json({ message: MESSAGES.SHOPIFY_RECORD_CREATED });
   } catch (error) {

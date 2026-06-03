@@ -1,5 +1,3 @@
-// src/services/domainService.ts
-
 import {
   Route53Client,
   CreateHostedZoneCommand,
@@ -45,7 +43,7 @@ class DomainService {
 
   // Método para verificar se a zona hospedada está ativa
   async verifyHostedZone(
-    hostedZoneId: string
+    hostedZoneId: string,
   ): Promise<{ NameServers: string[]; HostedZoneId: string }> {
     try {
       const getCommand = new GetHostedZoneCommand({ Id: hostedZoneId });
@@ -69,7 +67,7 @@ class DomainService {
   async createShopifyRecord(
     domain: string,
     hostedZoneId: string,
-    shopifyDomain: string
+    shopifyDomain: string,
   ): Promise<void> {
     const recordType = "CNAME"; // Ou "A" dependendo de como você deseja configurar
 
@@ -93,13 +91,13 @@ class DomainService {
             },
           ],
         },
-      }
+      },
     );
 
     try {
       await this.route53Client.send(changeResourceRecordSetsCommand);
       console.log(
-        `Registro DNS criado para ${domain} apontando para ${shopifyDomain}`
+        `Registro DNS criado para ${domain} apontando para ${shopifyDomain}`,
       );
     } catch (error) {
       console.error("Erro ao criar registro DNS para a loja Shopify:", error);
